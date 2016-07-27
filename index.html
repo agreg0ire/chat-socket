@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>socket io chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+       <form action="">
+         <input id="nickname" placeholder="your nickname" />
+         <input id="m" autocomplete="off" /><button>Send</button>
+       </form>
+       <script src="/socket.io/socket.io.js"></script>
+       <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+       <script>
+         const socket = io()
+
+         $('form').submit(() => {
+           socket.emit('chat msg', $('#nickname').val()+$('#m').val())
+           document.getElementById('messages').insertAdjacentHTML('afterbegin', '<li>'+document.getElementById('m').value+'</li>')
+           $('#m').val('')
+           return false
+         })
+
+         const events = ['chat msg', 'disconnected', 'new user connected']
+         events.forEach(event => {
+           socket.on(event, msg => document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li>${msg}</li>`))
+
+         })
+         //socket.on('disconnected', msg => document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li>${msg}</li>`))
+         //socket.on('new user connected', () => $('#messages').append($('<li>').text('new user connected')))
+         //socket.on('new user connected', () => document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li>new user connected</li>`))
+       </script>
+  </body>
+</html>
