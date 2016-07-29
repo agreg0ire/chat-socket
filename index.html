@@ -18,28 +18,10 @@
     <ul id="messages"></ul>
        <form action="">
          <input id="nickname" placeholder="your nickname" />
-         <input id="m" autocomplete="off" /><button>Send</button>
+         <input id="m" autocomplete="off"/><button>Send</button>
        </form>
        <script src="/socket.io/socket.io.js"></script>
        <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-       <script>
-         const socket = io()
-
-         $('form').submit(() => {
-           socket.emit('chat msg', $('#nickname').val()+$('#m').val())
-           document.getElementById('messages').insertAdjacentHTML('afterbegin', '<li>'+document.getElementById('m').value+'</li>')
-           $('#m').val('')
-           return false
-         })
-
-         const events = ['chat msg', 'disconnected', 'new user connected']
-         events.forEach(event => {
-           socket.on(event, msg => document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li>${msg}</li>`))
-
-         })
-         //socket.on('disconnected', msg => document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li>${msg}</li>`))
-         //socket.on('new user connected', () => $('#messages').append($('<li>').text('new user connected')))
-         //socket.on('new user connected', () => document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li>new user connected</li>`))
-       </script>
+       <script src="js/script.js"></script>
   </body>
 </html>
