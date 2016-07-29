@@ -1,23 +1,25 @@
 const socket = io()
 //emmitting
 $('form').submit(() => {
-  socket.emit('chat msg', $('#nickname').val()+$('#m').val())
-  document.getElementById('messages').insertAdjacentHTML('afterbegin', '<li><b><u>YOU said: </u></b>'+document.getElementById('m').value+'</li>')
-  $('#m').val('')
-  document.getElementById('m').addEventListener('keyup', isTyping) //event listener should BE added again here
-  return false
+
+  if(document.getElementById('m').value.trim() != ''){
+    socket.emit('chat msg', $('#nickname').val()+$('#m').val())
+    document.getElementById('messages').insertAdjacentHTML('afterbegin', '<li><b><u>YOU said: </u></b>'+document.getElementById('m').value+'</li>')
+    $('#m').val('')
+    document.getElementById('m').addEventListener('keyup', isTyping) //event listener should BE added again here
+  }
+return false
 })
 
 document.getElementById('m').addEventListener('keyup', isTyping)
 
 function isTyping(e) {
 
-  console.log(`e ${e}`);
-
   if(e.which !== 13) {
     socket.emit('isTyping', ' is typing...')
     document.getElementById('m').removeEventListener('keyup', isTyping)
   }
+
 }
 
 const events = ['chat msg', 'disconnected', 'new user connected', 'isTyping']
@@ -32,9 +34,8 @@ events.forEach(event => {
         let i = 0
         let interval = setInterval(() => {
 
-          console.log(`i => ${i}`);
-
           if(i === 0) {
+
             if(document.getElementById(msg) == null) {
               document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li id="${msg}"><b><u>${msg} is typing...</u></b></li>`)
             }else{//to reset on the top again
@@ -51,6 +52,19 @@ events.forEach(event => {
           i++//attention
         }, 1000)
     })
+
+}else if(event === 'chat msg'){
+
+  socket.on(event, payload => {
+    let ip = JSON.parse(payload).ip
+    let msg = JSON.parse(payload).msg
+
+if(document.getElementById(ip)) {
+  document.getElementById(ip).style.display = 'none'
+}
+
+    document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li><b><u>${ip} said:</u></b> ${msg}</li>`)
+  })
 
 }else{
     socket.on(event, msg => document.getElementById('messages').insertAdjacentHTML('afterbegin', `<li>${msg}</li>`))

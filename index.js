@@ -14,7 +14,7 @@ app.use(express.static('public'))
 io.on('connection', socket => {
   socket.broadcast.emit('new user connected', `<b><u>${ip}</u></b> connected`);
 
-  socket.on('chat msg', msg => socket.broadcast.emit('chat msg', `<b><u>${ip} said:</u></b> ${msg}`))
+  socket.on('chat msg', msg => socket.broadcast.emit('chat msg', JSON.stringify({ip:ip, msg:msg})))
 
   socket.on('isTyping', msg => socket.broadcast.emit('isTyping', ip))
 
