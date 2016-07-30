@@ -17,7 +17,20 @@ function isTyping(e) {
 
   if(e.which !== 13) {
     socket.emit('isTyping', ' is typing...')
-    document.getElementById('m').removeEventListener('keyup', isTyping)
+
+    let i = 0
+    let interval = setInterval(() => {
+
+      if(i === 0) {
+        document.getElementById('m').removeEventListener('keyup', isTyping)
+      }
+
+      if(i > 2) {
+        document.getElementById('m').addEventListener('keyup', isTyping)
+        clearInterval(interval)
+      }
+      i++
+    }, 1000)
   }
 
 }
@@ -45,7 +58,7 @@ events.forEach(event => {
           }
 
           if(i > 2) { // we choose to wait 3 seconds
-            i = 0 //to be able to re add event listener
+            i = 0 //still better to reset
             document.getElementById(msg).style.display = 'none'
             clearInterval(interval)
           }
