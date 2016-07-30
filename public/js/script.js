@@ -6,7 +6,6 @@ $('form').submit(() => {
     socket.emit('chat msg', $('#nickname').val()+$('#m').val())
     document.getElementById('messages').insertAdjacentHTML('afterbegin', '<li><b><u>YOU said: </u></b>'+document.getElementById('m').value+'</li>')
     $('#m').val('')
-    document.getElementById('m').addEventListener('keyup', isTyping) //event listener should BE added again here
   }
 return false
 })
